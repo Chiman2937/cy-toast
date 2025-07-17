@@ -31,19 +31,27 @@ export const ToastRender = () => {
 
   useEffect(() => {
     setRootDiv(getRootDiv());
-    const unsubscribe = toast.subscribe(setToasts);
+    const disconnect = toast._connect(setToasts);
     return () => {
       removeRootDiv();
-      unsubscribe();
+      disconnect();
     };
   }, []);
 
   if (!rootDiv) return null;
-
   return createPortal(
-    <div className="absolute w-full h-full top-0 left-0 pointer-events-none">
+    <div
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        top: 0,
+        left: 0,
+        pointerEvents: 'none',
+      }}
+    >
       {toasts.map((toast) => (
-        <div key={toast.id} className="absolute w-full h-full top-0 left-0">
+        <div key={toast.id} style={{ pointerEvents: 'auto' }}>
           {toast.content}
         </div>
       ))}
