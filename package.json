@@ -1,0 +1,49 @@
+{
+  "name": "cy-toast",
+  "version": "1.0.2",
+  "description": "A lightweight React toast/snackbar UI component for notifications.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chiman2937/cy-toast.git"
+  },
+  "keywords": [
+    "react",
+    "toast",
+    "snackbar",
+    "ui",
+    "component"
+  ],
+  "author": "chiman2937",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Chiman2937/cy-toast/issues"
+  },
+  "homepage": "https://github.com/Chiman2937/cy-toast#readme",
+  "devDependencies": {
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  }
+}
