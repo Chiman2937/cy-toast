@@ -1,0 +1,41 @@
+# 소스 코드 제외 (보통 src는 빌드 후 배포하지 않음)
+src/
+__tests__/
+tests/
+test/
+*.test.ts
+*.spec.ts
+
+# 설정 파일 제외
+tsconfig.json
+tsconfig.*.json
+.eslintrc*
+.prettierrc*
+.vscode/
+*.log
+
+# 빌드 도구 설정 파일
+rollup.config.js
+webpack.config.js
+vite.config.ts
+babel.config.js
+jest.config.js
+
+# 환경 설정
+.env
+.env.*
+
+# 문서/예시 제외 (원할 경우 포함 가능)
+.storybook/
+README.dev.md
+example/
+examples/
+demo/
+
+# 기타
+*.md~
+*.swp
+*.tgz
+*.zip
+*.bak
+*.tmp

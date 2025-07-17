@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // 더 최신 JS 문법으로 출력 (es2016 → esnext)
+    "module": "ESNext", // CommonJS → ESModule 권장
+    "jsx": "react-jsx", // React 17+ JSX 변환 방식
+    "declaration": true, // .d.ts 타입 선언 파일 생성 ← 매우 중요
+    "outDir": "dist", // 출력 위치 지정
+    "moduleResolution": "node", // 모듈 탐색 방식 (기본은 fine)
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true
+  },
+  "include": ["src"] // 컴파일할 대상 지정
+}
