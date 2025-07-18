@@ -1,14 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { toast } from './toast';
+import { toast, Toasts } from './toast';
 
 const TOAST_CONTAINER_ID = 'CY-toast-root';
-
-interface Toasts {
-  id: string;
-  content: React.ReactNode;
-}
 
 export const ToastRender = () => {
   const [rootDiv, setRootDiv] = useState<HTMLElement | null>();
@@ -50,9 +45,9 @@ export const ToastRender = () => {
         pointerEvents: 'none',
       }}
     >
-      {toasts.map((toast) => (
-        <div key={toast.id} style={{ pointerEvents: 'auto' }}>
-          {toast.content}
+      {toasts.map((t) => (
+        <div key={t.props.id} style={{ pointerEvents: 'auto' }}>
+          {t.toast.content(t.props)}
         </div>
       ))}
     </div>,
