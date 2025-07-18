@@ -1,6 +1,6 @@
 {
   "name": "cy-toast",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A lightweight React toast/snackbar UI component for notifications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
