@@ -45,11 +45,19 @@ export const ToastRender = () => {
         pointerEvents: 'none',
       }}
     >
-      {toasts.map((t) => (
-        <div key={t.id} style={{ pointerEvents: 'auto' }}>
-          {t.content(t)}
-        </div>
-      ))}
+      {toasts.map((t, index) => {
+        const closingCount = toasts
+          .slice(index, toasts.length)
+          .filter((x) => x.isClosing).length;
+        return (
+          <div key={t.id} style={{ pointerEvents: 'auto' }}>
+            {t.content({
+              ...t,
+              index: toasts.length - index - 1 - closingCount,
+            })}
+          </div>
+        );
+      })}
     </div>,
     rootDiv
   );

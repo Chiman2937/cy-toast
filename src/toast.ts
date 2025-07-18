@@ -1,17 +1,16 @@
 import React from 'react';
 
 export interface ToastContext {
-  close: () => void;
-  isClosing: boolean;
   isOpening: boolean;
+  isClosing: boolean;
+  index: number;
+  close: () => void;
 }
 
 export interface Toast {
   id: string;
-  duration: number;
-  closeDuration: number;
-  isClosing: boolean;
   isOpening: boolean;
+  isClosing: boolean;
   close: () => void;
   content: (toast: ToastContext) => React.ReactNode;
 }
@@ -42,12 +41,10 @@ export const toast = {
     const closeDuration = options?.closeDuration ?? 0;
     const openDuration = options?.openDuration ?? 0;
 
-    const close = () => toast.close(id);
+    const close = () => toast.close(id, closeDuration);
 
     const newToast: Toast = {
       id,
-      duration,
-      closeDuration,
       isClosing: false,
       isOpening: true,
       close,
@@ -62,15 +59,15 @@ export const toast = {
     }, openDuration);
 
     setTimeout(() => {
-      updateProps(id, { isClosing: true });
-      setTimeout(() => {
-        close();
-      }, closeDuration);
+      close();
     }, duration);
   },
-  close(id: string) {
-    toasts = toasts.filter((t) => t.id !== id);
-    renderToasts();
+  close(id: string, closeDuration: number) {
+    updateProps(id, { isClosing: true });
+    setTimeout(() => {
+      toasts = toasts.filter((t) => t.id !== id);
+      renderToasts();
+    }, closeDuration);
   },
   _connect(setToasts: (nodes: Toast[]) => void) {
     listeners.push(setToasts);
