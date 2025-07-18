@@ -1,64 +1,65 @@
 import React from 'react';
 
-type ToastContentProps = {
+export interface ToastContext {
+  close: () => void;
+  isClosing: boolean;
+  isOpening: boolean;
+}
+
+export interface Toast {
   id: string;
   duration: number;
   closeDuration: number;
   isClosing: boolean;
+  isOpening: boolean;
   close: () => void;
-};
-
-type ToastContent = (props: ToastContentProps) => React.ReactNode;
-
-export interface Toast {
-  content: ToastContent;
+  content: (toast: ToastContext) => React.ReactNode;
 }
 
-export interface Toasts {
-  toast: Toast;
-  props: ToastContentProps;
-}
-
-// type ToastKey = keyof Toast;
-
-let toasts: Toasts[] = [];
-let listeners: ((nodes: Toasts[]) => void)[] = [];
+let toasts: Toast[] = [];
+let listeners: ((nodes: Toast[]) => void)[] = [];
 
 const renderToasts = () => {
   listeners.forEach((l) => l(toasts));
 };
 
-const updateProps = (id: string, updated: Partial<ToastContentProps>) => {
-  toasts = toasts.map((t) =>
-    t.props.id === id ? { ...t, props: { ...t.props, ...updated } } : t
-  );
+const updateProps = (id: string, updated: Partial<Toast>) => {
+  toasts = toasts.map((t) => (t.id === id ? { ...t, ...updated } : t));
   renderToasts();
 };
 
 export const toast = {
   run(
-    content: ToastContent,
-    options?: { duration?: number; closeDuration?: number }
+    content: (toast: ToastContext) => React.ReactNode,
+    options?: {
+      duration?: number;
+      closeDuration?: number;
+      openDuration?: number;
+    }
   ) {
     const id = `T-${Math.ceil(Math.random() * 100000000)}`;
     const duration = options?.duration ?? 3000;
     const closeDuration = options?.closeDuration ?? 0;
+    const openDuration = options?.openDuration ?? 0;
 
     const close = () => toast.close(id);
 
-    const toastData = {
-      toast: { content },
-      props: {
-        id,
-        duration,
-        closeDuration,
-        isClosing: false,
-        close,
-      },
+    const newToast: Toast = {
+      id,
+      duration,
+      closeDuration,
+      isClosing: false,
+      isOpening: true,
+      close,
+      content,
     };
 
-    toasts = [...toasts, toastData];
+    toasts = [...toasts, newToast];
     renderToasts();
+
+    setTimeout(() => {
+      updateProps(id, { isOpening: false });
+    }, openDuration);
 
     setTimeout(() => {
       updateProps(id, { isClosing: true });
@@ -68,10 +69,10 @@ export const toast = {
     }, duration);
   },
   close(id: string) {
-    toasts = toasts.filter((t) => t.props.id !== id);
+    toasts = toasts.filter((t) => t.id !== id);
     renderToasts();
   },
-  _connect(setToasts: (nodes: Toasts[]) => void) {
+  _connect(setToasts: (nodes: Toast[]) => void) {
     listeners.push(setToasts);
     setToasts(toasts);
     return () => {
