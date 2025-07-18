@@ -1,18 +1,21 @@
 # 📜 cy-toast
-코드잇 중급프로젝트용 toast/snackbar 라이브러리 패키지 개발
+
+코드잇 중급 프로젝트용 toast/snackbar 라이브러리 패키지입니다.
 
 <br></br>
 
 ## ✨ Features
-- 단일 API로 간편하게 toast/snackbar 호출 가능
-- 자유로운 커스텀 기능 제공
-- React기반 createPortal 렌더링
-- 자동 사라짐 (duration)
-- close 함수 제공
+
+- headless ui로 자유로운 커스터마이징 제공
+- React 기반 lightweight toast 시스템
+- `open/close` 애니메이션을 위한 상태 값 제공
+- 각 Toast의 순서를 기반으로 애니메이션 커스터마이징 가능
+- 수동/자동 닫기 지원 (`duration=0`으로 무한 지속 가능)
 
 <br></br>
 
 ## 💡 Install
+
 ```bash
 npm install cy-toast
 ```
@@ -20,7 +23,9 @@ npm install cy-toast
 <br></br>
 
 ## 🔨 Usage
+
 ### 1. ToastRender 루트 컴포넌트 등록
+
 ```tsx
 // RootLayout.tsx or toast 사용할 컴포넌트에 ToastRender 컴포넌트 등록
 import { ToastRender } from 'cy-toast';
@@ -35,36 +40,85 @@ const TestComponent = () => {
 ```
 
 ### 2. 토스트 사용 (기본 텍스트)
+
 ```tsx
 import { toast } from 'cy-toast';
 
-toast.run('저장되었습니다!',{ duration: 3000}};
+toast.run(
+  ({ close }) => (
+    <div className="toast">
+      저장되었습니다! <button onClick={close}>닫기</button>
+    </div>
+  ),
+  { duration: 3000 }
+);
 ```
 
 ### 3. 토스트 사용 (사용자 정의 컴포넌트)
+
 ```tsx
 import { toast } from 'cy-toast';
+import clsx from 'clsx';
 
-toast.run((close) => (
-  <div className="bg-black absolute top-[50%] left-[50%] translate-x-[-50%] rounded-[10px]">
-    <span>내 위키 링크가 복사되었습니다.</span>
-    <button onClick={close} className="ml-4 underline">닫기</button>
-  </div>
-), { duration: 10000 });
+toast.run(
+  ({ close, isClosing, isOpening, index }) => (
+    <div
+      className={clsx(
+        'toast-base',
+        isClosing &&
+          index < 3 &&
+          'animation-slide-down-out pointer-events-none',
+        isOpening && 'animation-slide-down-in',
+        index === 1 && 'translate-y-[10px] scale-90',
+        index === 2 && 'translate-y-[15px] scale-80',
+        index >= 3 && 'translate-y-[20px] scale-70 opacity-0'
+      )}
+    >
+      <Icon />내 위키 링크가 복사되었습니다.
+      <button onClick={close}>닫기</button>
+    </div>
+  ),
+  { duration: 10000 }
+);
 ```
 
 <br></br>
 
-## 🚀 메서드
-| 인자        | 타입                                                | 설명                      |
-| --------- | ------------------------------------------------- | ----------------------- |
-| `content` | `ReactNode` or `(close: () => void) => ReactNode` | 토스트에 표시할 내용             |
-| `options` | `{ duration?: number }`                           | 자동 사라짐 시간 (ms, 기본 3000) |
+🚀 API
+
+| 매개변수  | 타입                                                                   | 설명                                                      |
+| --------- | ---------------------------------------------------------------------- | --------------------------------------------------------- |
+| `content` | `(context: ToastContext) => React.ReactNode`                           | 표시할 토스트 JSX를 반환하는 함수                         |
+| `options` | `{ duration?: number; closeDuration?: number; openDuration?: number }` | 애니메이션 및 유지 시간 옵션 (`0` 지정 시 자동 종료 없음) |
 
 <br></br>
+🧩 ToastContext 타입
+토스트 컨텐츠에 전달되는 객체는 다음과 같은 구조입니다.
 
-## 🧩 Type
-`onClose`는 `() => void` 타입입니다.
+```ts
+interface ToastContext {
+  close: () => void; // 수동 닫기 함수
+  isClosing: boolean; // 닫히는 중 여부 (true면 닫히는 애니메이션)
+  isOpening: boolean; // 열리는 중 여부 (true면 열리는 애니메이션)
+  index: number; // 토스트 표시 순서 (최신이 0)
+}
+```
+
+🧪 예제
+
 ```tsx
-toast.run((close) => <MyToast onClose={close} />);
+toast.run(({ close, isOpening, isClosing, index }) => (
+  <div
+    className={clsx(
+      'toast-base',
+      isOpening && 'fade-in',
+      isClosing && 'fade-out',
+      index === 1 && 'translate-y-[10px]',
+      index >= 2 && 'translate-y-[20px] opacity-80'
+    )}
+  >
+    토스트 메시지입니다!
+    <button onClick={close}>닫기</button>
+  </div>
+));
 ```

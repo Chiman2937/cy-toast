@@ -37,7 +37,7 @@ export const toast = {
     }
   ) {
     const id = `T-${Math.ceil(Math.random() * 100000000)}`;
-    const duration = options?.duration ?? 3000;
+    const duration = options?.duration ?? 0;
     const closeDuration = options?.closeDuration ?? 0;
     const openDuration = options?.openDuration ?? 0;
 
@@ -58,9 +58,11 @@ export const toast = {
       updateProps(id, { isOpening: false });
     }, openDuration);
 
-    setTimeout(() => {
-      close();
-    }, duration);
+    if (duration > 0) {
+      setTimeout(() => {
+        close();
+      }, duration);
+    }
   },
   close(id: string, closeDuration: number) {
     updateProps(id, { isClosing: true });
