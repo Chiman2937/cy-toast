@@ -37,9 +37,9 @@ export const toast = {
     }
   ) {
     const id = `T-${Math.ceil(Math.random() * 100000000)}`;
-    const duration = options?.duration ?? 0;
-    const closeDuration = options?.closeDuration ?? 0;
-    const openDuration = options?.openDuration ?? 0;
+    const duration = options?.duration ?? 3000;
+    const closeDuration = options?.closeDuration ?? 200;
+    const openDuration = options?.openDuration ?? 200;
 
     const close = () => toast.close(id, closeDuration);
 
